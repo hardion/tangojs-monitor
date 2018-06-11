@@ -1,0 +1,111 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/tangojs-tree/tangojs-tree.html">
+<link rel="import" href="../../bower_components/tangojs-form/tangojs-form.html">
+
+
+<link rel="import" href="../../bower_components/iron-iconset-svg/iron-iconset-svg.html">
+
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+
+<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<dom-module id="tangojs-monitor-app">
+  <template>
+    <style>
+    app-drawer-layout:not([narrow]) [drawer-toggle] {
+      display: none;
+    }
+    app-drawer section {
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    app-drawer h2 {
+      margin: 8px 0 0;
+      padding: 18px;
+      font-size: 18px;
+    }
+    app-drawer tangojs-tree {
+      display: block;
+      padding: 18px;
+    }
+    app-header {
+      color: #fff;
+      background-color: #77b9d9;
+      --app-header-background-front-layer: {
+        background-image: url(https://app-layout-assets.appspot.com/assets/test-drive.jpg);
+        background-position: 50% 10%;
+      };
+    }
+    [main-title] {
+      font-size: 2em;
+    }
+    </style>
+
+    <app-drawer-layout>
+
+      <app-drawer swipe-open slot="drawer">
+        <section>
+          <h2>Tango Database</h2>
+          <tangojs-tree selected="{{selected}}"></tangojs-tree>
+        </section>
+      </app-drawer>
+
+      <app-header-layout>
+
+        <app-header
+            condenses=false
+            fixed=false
+            reveals=false
+            shadow=true
+          >
+
+          <app-toolbar>
+            <div main-title >[[_deviceModel(selected)]]</div>
+          </app-toolbar>
+
+        </app-header>
+
+        <tangojs-form model="[[_deviceModel(selected)]]" hide-command> </tangojs-form>
+
+      </app-header-layout>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class TangojsMonitorApp extends Polymer.Element {
+      static get is() { return 'tangojs-monitor-app'; }
+      static get properties() {
+        return {
+          selected: {
+            type: String,
+            observer: "selectedChanged",
+            //value: "sys/tg_test/1" 
+            value: undefined 
+          }
+        };
+      }
+      selectedChanged(n, o){
+        console.log(`Selected ${n} ${o}`)
+      }
+      _deviceModel(model){
+        console.log(`deviceModel ${model}`)
+        return (model.match(/.*\/.*\/.*/g) || []).length ? model: undefined;
+      }
+    }
+
+    window.customElements.define(TangojsMonitorApp.is, TangojsMonitorApp);
+  </script>
+</dom-module>

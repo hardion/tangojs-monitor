@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>tangojs-monitor</title>
+    <meta name="description" content="tangojs-monitor description">
+
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <link rel="import" href="/src/tangojs-monitor-app/tangojs-monitor-app.html">
+
+    <link rel="import" href="/bower_components/tangojs-tree/tangojs-tree.html">
+
+<!-- TANGOJS SCRIPT-->
+<script src="node_modules/tangojs-core/lib/tangojs-core.js"></script>
+<script src="node_modules/tangojs-connector-local/lib/tangojs-connector-local.js"></script>
+<script src="node_modules/tangojs-connector-mtango/lib/tangojs-connector-mtango.js"></script>
+
+<!--
+    Configure your connector here.
+-->
+<script type="text/javascript">
+(function (window) {
+    'use strict'
+
+       // Setup tangojs-connector-local.
+       //const model = window.tangojsLocalDemoModel.createModel()
+       //const conn = new window.tangojs.connector.local.LocalConnector(model)
+
+       // example configuration for mTango rc3 backend
+       const conn = new window.tangojs.connector.mtango.MTangoConnector(
+	            'http://w-v-kitslab-web-0:8000/tango/rest/rc3',
+		         'w-v-kitslab-csdb-0', // hostname
+			      '10000', // port
+			           'admin', // username
+				        'admin') // password
+       console.log('Tango connection');
+            // Bind desired connector to TangoJS API.
+            window.tangojs.core.setConnector(conn)
+	       })(window)
+
+function findStylesheetsInImportedDocs(doc, map) {
+    map = map || {};
+    // map = map || new Map();
+    Array.prototype.forEach.call(doc.querySelectorAll('link[rel=import]'), (e) => {
+        const importedDoc = e.import;
+        if (importedDoc && !map[importedDoc]) {
+            const styles = importedDoc.querySelectorAll('style,link[rel=stylesheet]');
+            if (styles.length) {
+                map[importedDoc.URL] = {
+                    doc: importedDoc,
+                    styles: styles
+                };
+                // map.set(importedDoc, styles);
+            }
+            findStylesheetsInImportedDocs(importedDoc, map)
+        }
+    });
+    return map;
+}
+console.log("InImportedDocs(document)");
+console.log(findStylesheetsInImportedDocs(document));
+</script>
+
+  </head>
+  <body>
+    <tangojs-monitor-app></tangojs-monitor-app>
+  </body>
+</html>
